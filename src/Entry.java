@@ -33,7 +33,6 @@ public abstract class Entry implements Handler {
 	
 	
 	protected void renderText() {
-		//ChatColor.getLastColors()
 		String displayedString = "";
 		tickCount++;
 		if (isScrolling()) {
@@ -58,7 +57,6 @@ public abstract class Entry implements Handler {
 		}
 		
 		for (TextEffect textEffect : effects) {
-			EasyScoreboard.getPlugin().getLogger().info("EFFECTS ARE WORKING WUT");
 			displayedString = textEffect.tickProcess(displayedString);
 		}
 		
