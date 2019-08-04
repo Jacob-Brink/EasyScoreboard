@@ -6,7 +6,7 @@ public class ScoreboardPlayer {
 	
 	ScoreboardPlayer(Player p) {
 		player = p;
-		sDisplay = new ScoreDisplay(p);
+		sDisplay = new ScoreDisplay(p, "asdf");
 	}
 	
 	public ScoreDisplay getDisplay() {
