@@ -1,12 +1,11 @@
+package EasyScoreboard;
 import org.bukkit.entity.Player;
 
 public class ScoreboardPlayer {
 	private ScoreDisplay sDisplay;
-	private Player player;
 	
-	ScoreboardPlayer(Player p) {
-		player = p;
-		sDisplay = new ScoreDisplay(p, "asdf");
+	ScoreboardPlayer(Player p, String title) {
+		sDisplay = new ScoreDisplay(p, title);
 	}
 	
 	public ScoreDisplay getDisplay() {

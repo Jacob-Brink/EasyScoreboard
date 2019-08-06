@@ -1,12 +1,12 @@
-import java.util.ArrayList;
+package EasyScoreboard;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
+
 
 public class EasyScoreboard extends JavaPlugin {
 	private static JavaPlugin plugin;
@@ -32,7 +32,7 @@ public class EasyScoreboard extends JavaPlugin {
 		if (scorePlayers.containsKey(p)) {
 			return scorePlayers.get(p).getDisplay();
 		}
-		ScoreboardPlayer scorePlayer = new ScoreboardPlayer(p);
+		ScoreboardPlayer scorePlayer = new ScoreboardPlayer(p, "is this the issue?");
 		scorePlayers.put(p, scorePlayer);
 		return scorePlayer.getDisplay();
 	}
@@ -40,6 +40,18 @@ public class EasyScoreboard extends JavaPlugin {
 	public static void setPlugin(JavaPlugin pluginArg, int mWidth) {
 		plugin = pluginArg;
 		maxWidth = mWidth;
+	}
+	
+	@Override
+	public void onEnable() {
+		plugin = this;
+		maxWidth = 32;
+		getCommand("easyscoreboard").setExecutor(new CommandListener());
+	}
+	
+	@Override
+	public void onDisable() {
+		EasyScoreboard.cleanup();
 	}
 	
 	public static void cleanup() {

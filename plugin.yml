@@ -1,12 +1,10 @@
 name: EasyScoreboard
-main: EasyScoreboard
+main: EasyScoreboard.EasyScoreboard
 version: 1.0
 api-version: 1.13
 commands:
-  catan:
-   description: catan play
-   permission: catan.play
-   permissions:
-     catan.play
-   permission-message: You need catan.play in your groups permissions to execute that.
-   usage: "Usage: /catan play"
+  easyscoreboard:
+   description: Runs unit tests.
+   permission: easyscoreboard.tester
+   permission-message: You need easyscoreboard.tester in your groups permissions to execute that.
+   usage: "Usage: /easyscoreboard test"

@@ -1,3 +1,4 @@
+package EasyScoreboard;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -11,13 +12,15 @@ import org.bukkit.scoreboard.Team;
 import net.md_5.bungee.api.ChatColor;
 
 public class ScoreDisplay {
-	public static final int maxLines = 15;
+	public static final int maxLines = 14;
 	
 	private Player player;
 	private Scoreboard board;
 	private Objective objective;
 	private ArrayList<Integer> linePositions = new ArrayList<>();
 	private ArrayList<Line> lineUnits = new ArrayList<>();
+	private boolean cleared = false;
+	private String title = "EasyScoreboard";
 
 	public class Line {
 		private String key;
@@ -25,7 +28,6 @@ public class ScoreDisplay {
 		private int scoreValue;
 		
 		public void setLine(String text) {
-			EasyScoreboard.getPlugin().getLogger().info(text);
 			team.setPrefix("" + ChatColor.RESET + text);
 			displayLine();
 		}
@@ -53,6 +55,8 @@ public class ScoreDisplay {
 	
 	private void setupLines() {
 		int i = 0;
+		linePositions = new ArrayList<>();
+		lineUnits = new ArrayList<>();
 		for(ChatColor chatColor : ChatColor.values()) {
 			if (chatColor != ChatColor.RESET) {
 				
@@ -64,22 +68,38 @@ public class ScoreDisplay {
 		}
 	}
 	
-	ScoreDisplay(Player p, String title) {	
+	ScoreDisplay(Player p, String newTitle) {	
 		player = p;
+		title = newTitle;
+		setupBoard();
+		setupLines();
+	}
+	
+	private void setupBoard() {
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
 		objective = board.registerNewObjective("f", "f", "" + title);
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-		p.setScoreboard(board);
-		setupLines();
-		p.setScoreboard(board);
+		player.setScoreboard(board);
+	}
+
+	public void setTitle(String newTitle) {
+		title = newTitle;
+		board.getObjective(DisplaySlot.SIDEBAR).setDisplayName(newTitle);
 	}
 	
-	public void clearScoreBoard() {		
+	public void clearScoreBoard() {	
+		for (Line line : lineUnits) {
+			line.cleanup();
+		}
 		player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		cleared = true;
 	}
 	
 	private boolean checkPosition(int newPosition) {
-		return newPosition <= maxLines;
+		if (newPosition > maxLines || newPosition < 0) {
+			throw new IndexOutOfBoundsException("Line numbers range is 0-" + maxLines + ". " + newPosition + " was given instead.");
+		}
+		return true;
 	}
 	
 	private void updateLists() {
@@ -104,7 +124,7 @@ public class ScoreDisplay {
 				lineUnits.get(position).remove();
 			}
 			updateLists();
-		};		
+		};	
 	}
 	
 	public void cleanup() {
@@ -115,6 +135,11 @@ public class ScoreDisplay {
 	
 	public void setLine(String text, int position) {
 		if (checkPosition(position)) {
+			if (cleared) {
+				setupBoard();
+				setupLines();
+				cleared = false;
+			}
 			if (!linePositions.contains(position)) {
 				linePositions.add(position);
 			}
