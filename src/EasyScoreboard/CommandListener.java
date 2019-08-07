@@ -13,11 +13,7 @@ public class CommandListener implements CommandExecutor {
     	if (command.getName().equalsIgnoreCase("easyscoreboard")) {
     		String com = args[0];
     		if(com.equalsIgnoreCase("test")) {
-    			
     			ScoreboardPlayer p = EasyScoreboard.getScorePlayer(player);
-    			if (p == null) {
-    				EasyScoreboard.getPlugin().getLogger().info("p is null");
-    			}
     			p.getTester().runTests();
     			return true;
     		}

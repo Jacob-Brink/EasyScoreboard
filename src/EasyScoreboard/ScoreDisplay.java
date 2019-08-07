@@ -33,7 +33,6 @@ public class ScoreDisplay {
 				text = " ";
 			}
 			team.setPrefix("" + ChatColor.RESET + text);
-			
 			displayLine();
 		}
 		
@@ -90,7 +89,7 @@ public class ScoreDisplay {
 	
 	private void setupBoard() {
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
-		objective = board.registerNewObjective("f", "f", " " + title);
+		objective = board.registerNewObjective("EasyScoreboard", "EasyScoreboard", " " + title);
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		player.setScoreboard(board);
 	}
