@@ -25,16 +25,13 @@ public class EasyScoreboard extends JavaPlugin {
 		if (scorePlayers.containsKey(player)) {
 			return scorePlayers.get(player);
 		}
-		return null;
+		ScoreboardPlayer scorePlayer = new ScoreboardPlayer(player, " ");
+		scorePlayers.put(player, scorePlayer);
+		return scorePlayer;
 	}
 	
-	public static ScoreDisplay getDisplay(Player p) {
-		if (scorePlayers.containsKey(p)) {
-			return scorePlayers.get(p).getDisplay();
-		}
-		ScoreboardPlayer scorePlayer = new ScoreboardPlayer(p, "is this the issue?");
-		scorePlayers.put(p, scorePlayer);
-		return scorePlayer.getDisplay();
+	public static ScoreDisplay getDisplay(Player player) {
+		return getScorePlayer(player).getDisplay();
 	}
 	
 	public static void setPlugin(JavaPlugin pluginArg, int mWidth) {
@@ -56,7 +53,7 @@ public class EasyScoreboard extends JavaPlugin {
 	
 	public static void cleanup() {
 		for (Map.Entry<Player, ScoreboardPlayer> entry : scorePlayers.entrySet()) {
-			entry.getValue().getDisplay().cleanup();
+			entry.getValue().getDisplay().clearScoreBoard();
 		}
 	}
 }

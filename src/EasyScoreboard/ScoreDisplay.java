@@ -19,29 +19,38 @@ public class ScoreDisplay {
 	private Objective objective;
 	private ArrayList<Integer> linePositions = new ArrayList<>();
 	private ArrayList<Line> lineUnits = new ArrayList<>();
-	private boolean cleared = false;
+	private boolean cleared = true;
 	private String title = "EasyScoreboard";
 
 	public class Line {
 		private String key;
 		private Team team;
 		private int scoreValue;
+		private boolean removed = false;
 		
 		public void setLine(String text) {
+			if (text == "") {
+				text = " ";
+			}
 			team.setPrefix("" + ChatColor.RESET + text);
+			
 			displayLine();
 		}
 		
 		public void remove() {
-			board.resetScores(key);
+			if (!removed) {
+				board.resetScores(key);
+				removed = true;
+			}
 		}
 		
 		public void cleanup() {
-			team.unregister();
 			remove();
+			team.unregister();
 		}
 		
 		private void displayLine() {
+			removed = false;
 			objective.getScore(key).setScore(scoreValue);
 		}
 		
@@ -70,14 +79,18 @@ public class ScoreDisplay {
 	
 	ScoreDisplay(Player p, String newTitle) {	
 		player = p;
-		title = newTitle;
+		if (newTitle == "") {
+			title = " ";
+		} else {
+			title = newTitle;
+		}
 		setupBoard();
 		setupLines();
 	}
 	
 	private void setupBoard() {
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
-		objective = board.registerNewObjective("f", "f", "" + title);
+		objective = board.registerNewObjective("f", "f", " " + title);
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		player.setScoreboard(board);
 	}
@@ -88,11 +101,14 @@ public class ScoreDisplay {
 	}
 	
 	public void clearScoreBoard() {	
-		for (Line line : lineUnits) {
-			line.cleanup();
+		if (!cleared) {
+			for (Line line : lineUnits) {
+				line.cleanup();
+			}
+			board = Bukkit.getScoreboardManager().getNewScoreboard();
+			player.setScoreboard(board);
+			cleared = true;
 		}
-		player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-		cleared = true;
 	}
 	
 	private boolean checkPosition(int newPosition) {
@@ -125,12 +141,6 @@ public class ScoreDisplay {
 			}
 			updateLists();
 		};	
-	}
-	
-	public void cleanup() {
-		for (int i = 0; i < lineUnits.size(); i++) {
-			lineUnits.get(i).cleanup();
-		}
 	}
 	
 	public void setLine(String text, int position) {
